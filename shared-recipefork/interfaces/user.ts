@@ -1,9 +1,9 @@
 interface User {
   name: string,
   email: string,
-  profilePic?: string,
-  recipes?: [string],
-  pinnedRecipes?: [string],
+  profilePic: string,
+  recipes: [string],
+  pinnedRecipes: [string],
   forks: number,
 };
 
