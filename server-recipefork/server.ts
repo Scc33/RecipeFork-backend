@@ -14,10 +14,7 @@ const server: Application = express();
 const port: number = Number(process.env.PORT) || config.localport;
 
 // Connect to DB via mongoose
-setTimeout(
-  () => connect(config.mongo_connection, () => console.log('connected to cluster')), /* eslint-disable-line no-console */
-  30000,
-);
+connect(config.mongo_connection, () => console.log('connected to cluster')); /* eslint-disable-line no-console */
 
 // Allow CORS so that backend and frontend could be put on different servers
 const allowCrossDomain = (
