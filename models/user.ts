@@ -1,5 +1,12 @@
 import { model, Schema } from 'mongoose';
-import User from 'shared-recipefork/interfaces/user';
+
+interface User {
+  username: string,
+  email: string,
+  profilePic: string,
+  recipes: [string],
+  pinnedRecipes: [string],
+};
 
 const schema: Schema = new Schema<User>({
   username: {
