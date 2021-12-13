@@ -1,3 +1,4 @@
+/* eslint-disable */
 // import mongoose
 
 // TODO: set up mongoose schema for users
