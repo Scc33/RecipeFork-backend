@@ -76,8 +76,6 @@ Promise<[boolean, Record<string, string>]> = async (recipeObj: any, checkUnique:
   let validationError: boolean = false;
   const errorMessages: Record<string, string> = {};
 
-  console.log(recipeObj.userId);
-
   let validUserId: boolean = false;
   if (recipeObj.userId !== null) { // allow null to pass through, check further if not null
     if (typeof recipeObj.userId !== 'string') {
@@ -132,28 +130,20 @@ Promise<[boolean, Record<string, string>]> = async (recipeObj: any, checkUnique:
     // enforce ingredients requirement
     validationError = true;
     errorMessages.ingredients = 'ingredients is a required field';
-  } else if ('ingredients' in recipeObj === true && (!(Array.isArray(recipeObj.ingredients)) || recipeObj.ingredients.some((item: any) => typeof item !== 'string'))) {
-    // enforce ingredients is a string array
+  } else if (typeof recipeObj.ingredients !== 'string') {
+    // enforce ingredients is a string
     validationError = true;
-    errorMessages.ingredients = 'ingredients should be a string array field';
-  } else if (recipeObj.ingredients.length === 0) {
-    // enforce ingredients has at least 1 entry
-    validationError = true;
-    errorMessages.ingredients = 'ingredients must have at least one entry';
+    errorMessages.ingredients = 'ingredients should be a string field';
   }
 
   if ('instructions' in recipeObj === false) {
     // enforce instructions requirement
     validationError = true;
     errorMessages.instructions = 'instructions is a required field';
-  } else if ('instructions' in recipeObj === true && (!(Array.isArray(recipeObj.instructions)) || recipeObj.instructions.some((item: any) => typeof item !== 'string'))) {
-    // enforce instructions is a string array
+  } else if (typeof recipeObj.instructions !== 'string') {
+    // enforce ingredients is a string
     validationError = true;
-    errorMessages.instructions = 'instructions should be a string array field';
-  } else if (recipeObj.instructions.length === 0) {
-    // enforce instructions has at least 1 entry
-    validationError = true;
-    errorMessages.instructions = 'instructions must have at least one entry';
+    errorMessages.instructions = 'instructions should be a string field';
   }
 
   if ('tags' in recipeObj === true && (!(Array.isArray(recipeObj.tags)) || recipeObj.tags.some((item: any) => typeof item !== 'string'))) {
