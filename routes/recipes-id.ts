@@ -3,6 +3,7 @@ import { isValidObjectId } from 'mongoose';
 
 import queryParams from './common/query-params';
 import RecipeModel from '../models/recipe';
+import { validateRecipe } from './common/validators';
 
 const recipe = require('../models/recipe');
 
@@ -20,7 +21,7 @@ const recipesIdRoute = (router: Router) => {
 
       const foundRecipe = await queryParams(RecipeModel.findById(req.params.id), req.query);
       if (foundRecipe === null || foundRecipe === undefined) {
-        res.status(404).json({ message: 'Recipe GET failed - no user found', data: { _id: req.params.id } });
+        res.status(404).json({ message: 'Recipe GET failed - no recipe found', data: { _id: req.params.id } });
         return;
       }
 
@@ -43,7 +44,7 @@ const recipesIdRoute = (router: Router) => {
 
       const foundRecipe = await queryParams(RecipeModel.findById(req.params.id), req.query);
       if (foundRecipe === null || foundRecipe === undefined) {
-        res.status(404).json({ message: 'Recipe PUT failed - no user found', data: { _id: req.params.id } });
+        res.status(404).json({ message: 'Recipe PUT failed - no recipe found', data: { _id: req.params.id } });
         return;
       }
 
@@ -57,7 +58,17 @@ const recipesIdRoute = (router: Router) => {
 
       // TODO: additional verification
 
-      res.status(200).json({ message: 'Recipe PUT successful!', data: foundRecipe });
+      /* eslint-disable-next-line prefer-const */
+      let [validationError, errors] = await validateRecipe(req.body, false);
+
+      if (validationError) {
+        res.status(400).json({ message: 'Recipes PUT failed - validation error', data: errors });
+        return;
+      }
+
+      const updatedRecipe = await RecipeModel.findByIdAndUpdate(req.params.id, req.body, { returnDocument: 'after' });
+
+      res.status(200).json({ message: 'Recipe PUT successful!', data: updatedRecipe });
     } catch (error) {
       res.status(500).json({ message: 'Recipe PUT failed - something went wrong on the server', data: error });
     }
@@ -76,7 +87,7 @@ const recipesIdRoute = (router: Router) => {
 
       const foundRecipe = await queryParams(RecipeModel.findById(req.params.id), req.query);
       if (foundRecipe === null || foundRecipe === undefined) {
-        res.status(404).json({ message: 'Recipe DELETE failed - no user found', data: { _id: req.params.id } });
+        res.status(404).json({ message: 'Recipe DELETE failed - no recipe found', data: { _id: req.params.id } });
         return;
       }
 
