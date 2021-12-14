@@ -4,7 +4,6 @@ interface User {
   username: string,
   email: string,
   profilePic: string,
-  recipes: [string],
   pinnedRecipes: [string],
 }
 
@@ -17,9 +16,6 @@ const schema: Schema = new Schema<User>({
   },
   profilePic: {
     type: String, default: null,
-  },
-  recipes: {
-    type: [String],
   },
   pinnedRecipes: {
     type: [String],

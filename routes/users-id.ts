@@ -2,8 +2,9 @@ import { Request, Response, Router } from 'express';
 import { isValidObjectId } from 'mongoose';
 
 import queryParams from './common/query-params';
+import RecipeModel from '../models/recipe';
 import UserModel from '../models/user';
-import validateUser from './common/validators';
+import { validateUser } from './common/validators';
 
 const usersIdRoute = (router: Router) => {
   router.get('/users/:id', async (req: Request, res: Response) => {
@@ -110,12 +111,12 @@ const usersIdRoute = (router: Router) => {
         return;
       }
 
-      // TODO: determine behavior on a user delete
-      // Remove owner? Delete recipe?
-
       const removedUser = await UserModel.findByIdAndRemove(req.params.id);
 
       res.status(200).json({ message: 'User DELETE successful!', data: removedUser });
+
+      // wipe author from recipes, leave around in case of forks
+      await RecipeModel.updateMany({ 'userId': removedUser._id }, { 'userId': null });
     } catch (error) {
       res.status(500).json({ message: 'User DELETE failed - something went wrong on the server', data: error });
     }
