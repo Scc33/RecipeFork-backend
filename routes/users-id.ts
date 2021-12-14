@@ -11,6 +11,7 @@ const usersIdRoute = (router: Router) => {
     try {
       if (req.params === undefined || req.params === null || req.params.id === undefined || req.params.id === null) {
         res.status(400).json({ message: 'User GET failed - no object id provided', data: { _id: req.params.id } });
+        return;
       }
 
       if (isValidObjectId(req.params.id) === false) {
@@ -98,6 +99,7 @@ const usersIdRoute = (router: Router) => {
     try {
       if (req.params === undefined || req.params === null || req.params.id === undefined || req.params.id === null) {
         res.status(400).json({ message: 'User DELETE failed - no object id provided', data: { _id: req.params.id } });
+        return;
       }
 
       if (isValidObjectId(req.params.id) === false) {

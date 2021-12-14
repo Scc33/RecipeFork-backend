@@ -3,15 +3,15 @@ import { isValidObjectId } from 'mongoose';
 
 import queryParams from './common/query-params';
 import RecipeModel from '../models/recipe';
+import UserModel from '../models/user';
 import { validateRecipe } from './common/validators';
-
-const recipe = require('../models/recipe');
 
 const recipesIdRoute = (router: Router) => {
   router.get('/recipes/:id', async (req: Request, res: Response) => {
     try {
       if (req.params === undefined || req.params === null || req.params.id === undefined || req.params.id === null) {
         res.status(400).json({ message: 'Recipe GET failed - no object id provided', data: { _id: req.params.id } });
+        return;
       }
 
       if (isValidObjectId(req.params.id) === false) {
@@ -35,6 +35,7 @@ const recipesIdRoute = (router: Router) => {
     try {
       if (req.params === undefined || req.params === null || req.params.id === undefined || req.params.id === null) {
         res.status(400).json({ message: 'Recipe PUT failed - no object id provided', data: { _id: req.params.id } });
+        return;
       }
 
       if (isValidObjectId(req.params.id) === false) {
@@ -56,10 +57,17 @@ const recipesIdRoute = (router: Router) => {
         return;
       }
 
-      // TODO: additional verification
-
       /* eslint-disable-next-line prefer-const */
       let [validationError, errors] = await validateRecipe(req.body, false);
+
+      // can change name as long as no OTHER recipe from the user has a recipe with that name
+      if ('name' in errors === false) {
+        const recipesByUser = await RecipeModel.find({ 'userId': req.body.userId });
+        if (recipesByUser.some(item => item.name === req.body.name && String(item._id) !== req.body._id)) {
+          validationError = true;
+          errors.name = `${req.body.name} is already used by this user, please use a unique name`;
+        }
+      }
 
       if (validationError) {
         res.status(400).json({ message: 'Recipes PUT failed - validation error', data: errors });
@@ -78,6 +86,7 @@ const recipesIdRoute = (router: Router) => {
     try {
       if (req.params === undefined || req.params === null || req.params.id === undefined || req.params.id === null) {
         res.status(400).json({ message: 'Recipe DELETE failed - no object id provided', data: { _id: req.params.id } });
+        return;
       }
 
       if (isValidObjectId(req.params.id) === false) {
@@ -95,8 +104,10 @@ const recipesIdRoute = (router: Router) => {
 
       res.status(200).json({ message: 'Recipe DELETE successful!', data: removedRecipe });
 
-      // TODO: remove from user's that pinned the recipe
+      // remove from users that pinned the recipe
+      await UserModel.updateMany({ pinnedRecipes: { $in: removedRecipe._id }}, { $pull: { pinnedRecipes: removedRecipe._id } });
     } catch (error) {
+      console.log(error);
       res.status(500).json({ message: 'Recipe DELETE failed - something went wrong on the server', data: error });
     }
   });
