@@ -10,7 +10,7 @@ interface User {
 
 const schema: Schema = new Schema<User>({
   username: {
-    type: String, required: [true, 'username is required'],
+    type: String, required: [true, 'username is required'], unique: true,
   },
   email: {
     type: String, required: [true, 'email is required'], unique: true,
