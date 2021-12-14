@@ -1,6 +1,7 @@
 import UserModel from '../../models/user';
 
-export const validateUser: (userObj: any, checkUnique: boolean) => Promise<[boolean, Record<string, string>]> = async (userObj: any, checkUnique: boolean) => {
+const validateUser: (userObj: any, checkUnique: boolean) =>
+Promise<[boolean, Record<string, string>]> = async (userObj: any, checkUnique: boolean) => {
   let validationError: boolean = false;
   const errorMessages: Record<string, string> = {};
 
@@ -61,4 +62,6 @@ export const validateUser: (userObj: any, checkUnique: boolean) => Promise<[bool
   } // TODO: enforce all recipes exist
 
   return [validationError, errorMessages];
-}
+};
+
+export default validateUser;

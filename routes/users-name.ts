@@ -1,7 +1,7 @@
 import { Request, Response, Router } from 'express';
 
 import UserModel from '../models/user';
-import { validateUser } from './common/validators';
+import validateUser from './common/validators';
 
 const usersNameRoute = (router: Router) => {
   router.get('/users/:username', async (req: Request, res: Response) => {
@@ -27,6 +27,7 @@ const usersNameRoute = (router: Router) => {
         return;
       }
 
+      /* eslint-disable-next-line prefer-const */
       let [validationError, errors] = await validateUser(req.body, false);
 
       // make sure URL and body agree on which user is being modified
@@ -40,14 +41,16 @@ const usersNameRoute = (router: Router) => {
       // can change email so long as no OTHER user currently has that email
       if ('email' in errors === false) {
         const userWithEmail = await UserModel.findOne({ email: req.body.email });
-        if (userWithEmail !== null && userWithEmail !== undefined && userWithEmail.username !== req.params.username) {
+        if (userWithEmail !== null
+          && userWithEmail !== undefined
+          && userWithEmail.username !== req.params.username) {
           validationError = true;
           errors.email = `${req.body.email} is already used by another user, please use a unique username`;
         }
       }
 
       if (validationError) {
-        res.status(400).json({ message: 'User PUT failed - validation error', errors: errors });
+        res.status(400).json({ message: 'User PUT failed - validation error', errors });
         return;
       }
 

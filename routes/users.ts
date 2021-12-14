@@ -1,7 +1,7 @@
 import { Request, Response, Router } from 'express';
 
 import UserModel from '../models/user';
-import { validateUser } from './common/validators';
+import validateUser from './common/validators';
 
 const usersRoute = (router: Router) => {
   router.get('/users', async (req: Request, res: Response) => {
@@ -19,7 +19,7 @@ const usersRoute = (router: Router) => {
       const [validationError, errors] = await validateUser(req.body, true);
 
       if (validationError) {
-        res.status(400).json({ message: 'User POST failed - validation error', errors: errors });
+        res.status(400).json({ message: 'User POST failed - validation error', errors });
         return;
       }
 

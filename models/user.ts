@@ -6,7 +6,7 @@ interface User {
   profilePic: string,
   recipes: [string],
   pinnedRecipes: [string],
-};
+}
 
 const schema: Schema = new Schema<User>({
   username: {
