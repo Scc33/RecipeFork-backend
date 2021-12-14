@@ -97,7 +97,7 @@ Promise<[boolean, Record<string, string>]> = async (recipeObj: any, checkUnique:
       }
     }
   }
-  
+
   if ('name' in recipeObj === false) {
     // enforce name requirement
     validationError = true;
@@ -108,8 +108,8 @@ Promise<[boolean, Record<string, string>]> = async (recipeObj: any, checkUnique:
     errorMessages.name = 'name should be a string field';
   } else if (checkUnique === true && validUserId === true) {
     // enforce uniqueness on name within a user
-    const recipesByUser = await RecipeModel.find({ 'userId': recipeObj.userId });
-    if (recipesByUser.some(item => item.name === recipeObj.name)) {
+    const recipesByUser = await RecipeModel.find({ userId: recipeObj.userId });
+    if (recipesByUser.some((item) => item.name === recipeObj.name)) {
       validationError = true;
       errorMessages.name = `${recipeObj.name} is already used by this user, please use a unique name`;
     }

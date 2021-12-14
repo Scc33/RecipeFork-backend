@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import { Request, Response, Router } from 'express';
 import { isValidObjectId } from 'mongoose';
 
@@ -9,13 +10,14 @@ import { validateRecipe } from './common/validators';
 const recipesIdRoute = (router: Router) => {
   router.get('/recipes/:id', async (req: Request, res: Response) => {
     try {
-      if (req.params === undefined || req.params === null || req.params.id === undefined || req.params.id === null) {
+      if (req.params === undefined || req.params === null
+        || req.params.id === undefined || req.params.id === null) {
         res.status(400).json({ message: 'Recipe GET failed - no object id provided', data: { _id: req.params.id } });
         return;
       }
 
       if (isValidObjectId(req.params.id) === false) {
-        res.status(400).json({ message: 'Recipe GET failed - invalid object id', data: { _id: req.params.id } })
+        res.status(400).json({ message: 'Recipe GET failed - invalid object id', data: { _id: req.params.id } });
         return;
       }
 
@@ -33,13 +35,14 @@ const recipesIdRoute = (router: Router) => {
 
   router.put('/recipes/:id', async (req: Request, res: Response) => {
     try {
-      if (req.params === undefined || req.params === null || req.params.id === undefined || req.params.id === null) {
+      if (req.params === undefined || req.params === null
+        || req.params.id === undefined || req.params.id === null) {
         res.status(400).json({ message: 'Recipe PUT failed - no object id provided', data: { _id: req.params.id } });
         return;
       }
 
       if (isValidObjectId(req.params.id) === false) {
-        res.status(400).json({ message: 'Recipe PUT failed - invalid object id', data: { _id: req.params.id } })
+        res.status(400).json({ message: 'Recipe PUT failed - invalid object id', data: { _id: req.params.id } });
         return;
       }
 
@@ -52,7 +55,7 @@ const recipesIdRoute = (router: Router) => {
       if ('_id' in req.body === false) {
         res.status(400).json({ message: 'Recipe PUT failed - no object id provided in body (_id)' });
         return;
-      } else if (req.params.id !== req.body._id) {
+      } if (req.params.id !== req.body._id) {
         res.status(400).json({ message: 'Recipe PUT failed - parameter id and body _id must agree', data: { param_id: req.params.id, _id: req.body._id } });
         return;
       }
@@ -62,10 +65,12 @@ const recipesIdRoute = (router: Router) => {
 
       // can change name as long as no OTHER recipe from the user has a recipe with that name
       if ('name' in errors === false) {
-        const recipesByUser = await RecipeModel.find({ 'userId': req.body.userId });
-        if (recipesByUser.some(item => item.name === req.body.name && String(item._id) !== req.body._id)) {
+        const recipesByUser = await RecipeModel.find({ userId: req.body.userId });
+        if (recipesByUser.some(
+          (item) => item.name === req.body.name && String(item._id) !== req.body._id,
+        )) {
           validationError = true;
-          errors.name = `${req.body.name} is already used by this user, please use a unique name`;
+          errors.name = `${req.body.name} is already used by the provided user, please use a unique name`;
         }
       }
 
@@ -84,13 +89,14 @@ const recipesIdRoute = (router: Router) => {
 
   router.delete('/recipes/:id', async (req: Request, res: Response) => {
     try {
-      if (req.params === undefined || req.params === null || req.params.id === undefined || req.params.id === null) {
+      if (req.params === undefined || req.params === null
+        || req.params.id === undefined || req.params.id === null) {
         res.status(400).json({ message: 'Recipe DELETE failed - no object id provided', data: { _id: req.params.id } });
         return;
       }
 
       if (isValidObjectId(req.params.id) === false) {
-        res.status(400).json({ message: 'Recipe DELETE failed - invalid object id', data: { _id: req.params.id } })
+        res.status(400).json({ message: 'Recipe DELETE failed - invalid object id', data: { _id: req.params.id } });
         return;
       }
 
@@ -105,9 +111,11 @@ const recipesIdRoute = (router: Router) => {
       res.status(200).json({ message: 'Recipe DELETE successful!', data: removedRecipe });
 
       // remove from users that pinned the recipe
-      await UserModel.updateMany({ pinnedRecipes: { $in: removedRecipe._id }}, { $pull: { pinnedRecipes: removedRecipe._id } });
+      await UserModel.updateMany(
+        { pinnedRecipes: { $in: removedRecipe._id } },
+        { $pull: { pinnedRecipes: removedRecipe._id } },
+      );
     } catch (error) {
-      console.log(error);
       res.status(500).json({ message: 'Recipe DELETE failed - something went wrong on the server', data: error });
     }
   });
