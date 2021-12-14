@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon --exec ts-node server.ts",
+    "start-prod": "ts-node --transpile-only server.ts",
     "lint": "ts-node ./node_modules/eslint/bin/eslint.js . --ext .ts"
   },
   "keywords": [],
@@ -29,5 +30,9 @@
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.25.3",
     "eslint-plugin-jsx-a11y": "^6.5.1"
+  },
+  "engines": {
+    "node": "16.8.0",
+    "npm": "7.21.0"
   }
 }
