@@ -49,24 +49,27 @@ Promise<[boolean, Record<string, string>]> = async (userObj: any, checkUnique: b
   } // TODO: image exists?
 
   // enforce pinnedRecipes is a string array
-  if ('pinnedRecipes' in userObj === true && (!(Array.isArray(userObj.pinnedRecipes)) || userObj.pinnedRecipes.some((item: any) => typeof item !== 'string'))) {
-    validationError = true;
-    errorMessages.pinnedRecipes = 'pinnedRecipes should be a string array field';
-  } else if (userObj.pinnedRecipes.length > 6) {
-    // enforce pinnedRecipes has 6 or less entries
-    validationError = true;
-    errorMessages.pinnedRecipes = 'pinnedRecipes can only have 6 entries at max';
-  } else if ((new Set(userObj.pinnedRecipes)).size !== userObj.pinnedRecipes.length) {
-    validationError = true;
-    errorMessages.pinnedRecipes = 'pinnedRecipes can only include unique entries';
-  } else {
-    // enforce allowing only recipes that exist
-    const foundRecipes = await RecipeModel.find({ _id: { $in: userObj.pinnedRecipes } });
-    if (foundRecipes.length !== userObj.pinnedRecipes.length) {
+  if ('pinnedRecipes' in userObj === true) {
+    if (!(Array.isArray(userObj.pinnedRecipes)) || userObj.pinnedRecipes.some((item: any) => typeof item !== 'string')) {
       validationError = true;
-      errorMessages.pinnedRecipes = 'pinnedRecipes can only have ids of recipes that exist';
+      errorMessages.pinnedRecipes = 'pinnedRecipes should be a string array field';
+    } else if (userObj.pinnedRecipes.length > 6) {
+      // enforce pinnedRecipes has 6 or less entries
+      validationError = true;
+      errorMessages.pinnedRecipes = 'pinnedRecipes can only have 6 entries at max';
+    } else if ((new Set(userObj.pinnedRecipes)).size !== userObj.pinnedRecipes.length) {
+      validationError = true;
+      errorMessages.pinnedRecipes = 'pinnedRecipes can only include unique entries';
+    } else {
+      // enforce allowing only recipes that exist
+      const foundRecipes = await RecipeModel.find({ _id: { $in: userObj.pinnedRecipes } });
+      if (foundRecipes.length !== userObj.pinnedRecipes.length) {
+        validationError = true;
+        errorMessages.pinnedRecipes = 'pinnedRecipes can only have ids of recipes that exist';
+      }
     }
   }
+  
 
   return [validationError, errorMessages];
 };
