@@ -1,11 +1,10 @@
-const queryParams = (baseQuery, queryParams) => {
-  const where = ('where' in queryParams) ? JSON.parse(queryParams.where) : undefined;
-  const sort = ('sort' in queryParams) ? JSON.parse(queryParams.sort) : undefined;
-  const select = ('select' in queryParams) ? JSON.parse(queryParams.select) : undefined;
-  const skip = ('skip' in queryParams) ? Number(queryParams.skip) : undefined;
-  const limit = ('limit' in queryParams) ? Number(queryParams.limit) : undefined;
-  const count = ('count' in queryParams) ? JSON.parse(queryParams.count) : undefined;
-
+const queryParams = (baseQuery, params) => {
+  const where = ('where' in params) ? JSON.parse(params.where) : undefined;
+  const sort = ('sort' in params) ? JSON.parse(params.sort) : undefined;
+  const select = ('select' in params) ? JSON.parse(params.select) : undefined;
+  const skip = ('skip' in params) ? Number(params.skip) : undefined;
+  const limit = ('limit' in params) ? Number(params.limit) : undefined;
+  const count = ('count' in params) ? JSON.parse(params.count) : undefined;
 
   let modifiedQuery = baseQuery;
 
@@ -34,6 +33,6 @@ const queryParams = (baseQuery, queryParams) => {
   }
 
   return modifiedQuery;
-}
+};
 
 export default queryParams;
