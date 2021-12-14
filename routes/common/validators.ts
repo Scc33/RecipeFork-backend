@@ -83,9 +83,10 @@ Promise<[boolean, Record<string, string>]> = async (recipeObj: any, checkUnique:
       validationError = true;
       errorMessages.userId = 'userId should be a string field or null';
     } else if (isValidObjectId(recipeObj.userId) === false) {
+      // enforce userId is a string
       validationError = true;
       errorMessages.userId = 'userId should be a valid object id string';
-    } else if (checkUnique === true) {
+    } else {
       // enforce userId exists
       const userWithId = await UserModel.findById(recipeObj.userId);
       if (userWithId === null && userWithId === undefined) {
@@ -152,11 +153,11 @@ Promise<[boolean, Record<string, string>]> = async (recipeObj: any, checkUnique:
     errorMessages.tags = 'tags should be a string array field';
   } // TODO: tag enforcement, if applicable
 
-  if ('images' in recipeObj === true && (!(Array.isArray(recipeObj.images)) || recipeObj.images.some((item: any) => typeof item !== 'string'))) {
-    // enforce images is a string array
+  if ('image' in recipeObj === true && recipeObj.image !== null && typeof recipeObj.image !== 'string') {
+    // enforce image is a string or null
     validationError = true;
-    errorMessages.images = 'images should be a string array field';
-  } // TODO: enforce all images exist?
+    errorMessages.images = 'images should be a string field';
+  } // TODO: enforce image exists
 
   if ('forks' in recipeObj === true && typeof recipeObj.forks !== 'number') {
     // enforce forks is a number
@@ -172,7 +173,18 @@ Promise<[boolean, Record<string, string>]> = async (recipeObj: any, checkUnique:
     // enforce forkOrigin is a string or null
     validationError = true;
     errorMessages.forkOrigin = 'forkOrigin should be a string field or null';
-  } // TODO: fork origin exists?
+  } else if ('forkOrigin' in recipeObj === true && recipeObj.forkOrigin !== null) {
+    if (isValidObjectId(recipeObj.forkOrigin) === false) {
+      validationError = true;
+      errorMessages.forkOrigin = 'forkOrigin should be a valid object id string';
+    } else {
+      const foundRecipe = await RecipeModel.findById(recipeObj.forkOrigin);
+      if (foundRecipe === null || foundRecipe === undefined) {
+        validationError = true;
+        errorMessages.forkOrigin = 'forkOrigin is not pointing to an existing recipe';
+      }
+    }
+  }
 
   return [validationError, errorMessages];
 };

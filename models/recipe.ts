@@ -8,7 +8,7 @@ interface Recipe {
   ingredients: string,
   instructions: string,
   tags: [string],
-  images: [string],
+  image: string,
   forks: number,
   forkOrigin: string,
 }
@@ -22,7 +22,7 @@ const schema: Schema = new Schema<Recipe>({
   ingredients: { type: String, required: [true, 'ingredients are required'] },
   instructions: { type: String, required: [true, 'instructions are required'] },
   tags: [String],
-  images: [String],
+  image: { type: String, default: null },
   forks: { type: Number, default: 0 },
   forkOrigin: { type: String, default: null },
 });
