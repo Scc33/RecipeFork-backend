@@ -1,6 +1,6 @@
 import bodyParser from 'body-parser';
 import express, {
-  Application, NextFunction, Request, Response, Router,
+  Application, NextFunction, Request, Response, Router, json
 } from 'express';
 import { connect } from 'mongoose';
 
@@ -29,9 +29,12 @@ const allowCrossDomain = (
 };
 server.use(allowCrossDomain);
 
+// raise json limit for base64 image transfer
+server.use(json({ limit: '50mb' }));
+
 // Use the body-parser package in our application
 server.use(bodyParser.urlencoded({
-  extended: true,
+  extended: true
 }));
 server.use(bodyParser.json());
 
