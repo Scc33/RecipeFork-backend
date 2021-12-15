@@ -1,5 +1,6 @@
 import { isValidObjectId } from 'mongoose';
 
+import ImageModel from '../../models/image';
 import RecipeModel from '../../models/recipe';
 import UserModel from '../../models/user';
 
@@ -159,7 +160,7 @@ Promise<[boolean, Record<string, string>]> = async (recipeObj: any, checkUnique:
   if ('image' in recipeObj === true && recipeObj.image !== null && typeof recipeObj.image !== 'string') {
     // enforce image is a string or null
     validationError = true;
-    errorMessages.images = 'images should be a string field';
+    errorMessages.image = 'image should be a string field';
   } // TODO: enforce image exists
 
   if ('forks' in recipeObj === true && typeof recipeObj.forks !== 'number') {
@@ -187,6 +188,42 @@ Promise<[boolean, Record<string, string>]> = async (recipeObj: any, checkUnique:
         errorMessages.forkOrigin = 'forkOrigin is not pointing to an existing recipe';
       }
     }
+  }
+
+  return [validationError, errorMessages];
+};
+
+export const validateImage: (imageObj: any) =>
+Promise<[boolean, Record<string, string>]> = async (imageObj: any) => {
+  let validationError: boolean = false;
+  const errorMessages: Record<string, string> = {};
+
+  if ('base64' in imageObj === false) {
+    // enforce base64 requirement
+    validationError = true;
+    errorMessages.base64 = 'base64 is a required field';
+  } else if (typeof imageObj.base64 !== 'string') {
+    // enforce base64 is a string
+    validationError = true;
+    errorMessages.base64 = 'base64 should be a string field';
+  } else if (imageObj.base64 === '') {
+    // enforce base64 isn't empty string
+    validationError = true;
+    errorMessages.base64 = 'base64 cannot be an empty string';
+  }
+
+  if ('format' in imageObj === false) {
+    // enforce format requirement
+    validationError = true;
+    errorMessages.format = 'format is a required field';
+  } else if (typeof imageObj.format !== 'string') {
+    // enforce format is a string
+    validationError = true;
+    errorMessages.format = 'format should be a string field';
+  } else if (imageObj.base64 === '') {
+    // enforce format isn't empty string
+    validationError = true;
+    errorMessages.format = 'format cannot be an empty string';
   }
 
   return [validationError, errorMessages];
