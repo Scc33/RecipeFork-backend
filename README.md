@@ -2,6 +2,8 @@
 
 Backend repository for Recipe Fork, a website for creating, sharing and forking off of existing recipes. Built by Team Never Gonna Give You Up for CS 498RK The Art of Web Programming (Fall 2021).
 
+Frontend repository can be found here: https://gitlab.com/seanmc4/recipefork-frontend.
+
 Deployed to Heroku, can be found at the following URL: https://recipefork-backend.herokuapp.com.
 Credit to https://medium.com/swlh/how-do-i-deploy-my-code-to-heroku-using-gitlab-ci-cd-6a232b6be2e4 for the CI setup.
 
@@ -33,6 +35,12 @@ Recipe schema:
 | forks | number | ✘ | ✘ | 0 | non-negative only |
 | forkOrigin | string? | ✘ | ✘ | null | document ID for source recipe |
 
+Images schema:
+| Field | Type | Required | Unique | Default | Notes |
+|-------|------|----------|--------|---------|-------|
+| base64 | string | ✓ | ✘ | - | Base64 encoding of image |
+| format | string | ✓ | ✘ | - | Denotes filetype, unused by frontend |
+
 ### Endpoints
 
 These are the following endpoints available:
@@ -49,6 +57,11 @@ These are the following endpoints available:
 | recipes/:id| GET     | Respond with details of specified recipe or 404 error   |
 |            | PUT     | Replace entire recipe with supplied recipe or 404 error |
 |            | DELETE  | Delete specified recipe or 404 error                    |
+| images    | GET     | Respond with a List of images                          |
+|            | POST    | Create a new image. Respond with details of new image |
+| images/:id| GET     | Respond with details of specified image or 404 error   |
+|            | PUT     | Replace entire image with supplied image or 404 error |
+|            | DELETE  | Delete specified image or 404 error                    |
 
 Side effects:
 - DELETE on `users/:id` will make the user's authored recipes userID null
