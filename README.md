@@ -2,7 +2,7 @@
 
 Backend repository for Recipe Fork, a website for creating, sharing and forking off of existing recipes. Built by Team Never Gonna Give You Up for CS 498RK The Art of Web Programming (Fall 2021).
 
-Frontend repository can be found here: https://gitlab.com/seanmc4/recipefork-frontend.
+Frontend repository can be found [here](https://github.com/Scc33/RecipeFork-frontend). Originally located [here](https://gitlab.com/seanmc4/recipefork-frontend).
 
 Deployed to Heroku, can be found at the following URL: https://recipefork-backend.herokuapp.com.
 Credit to https://medium.com/swlh/how-do-i-deploy-my-code-to-heroku-using-gitlab-ci-cd-6a232b6be2e4 for the CI setup.
