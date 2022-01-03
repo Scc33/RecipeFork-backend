@@ -4,10 +4,10 @@ Backend repository for Recipe Fork, a website for creating, sharing and forking 
 
 Frontend repository can be found [here](https://github.com/Scc33/RecipeFork-frontend). Originally located [here](https://gitlab.com/seanmc4/recipefork-frontend).
 
-Deployed to Heroku, can be found [here](https://recipefork-backend.herokuapp.com)
-[Credit for the CI setup](https://medium.com/swlh/how-do-i-deploy-my-code-to-heroku-using-gitlab-ci-cd-6a232b6be2e4)
-
-Look into [this](https://medium.com/@morgannewman/how-to-keep-your-free-heroku-app-online-forever-4093ef69d7f5) for keeping the app up and running.
+### Resources
+- Deployed to Heroku, can be found [here](https://recipefork-backend.herokuapp.com)
+- [Credit for the CI setup](https://medium.com/swlh/how-do-i-deploy-my-code-to-heroku-using-gitlab-ci-cd-6a232b6be2e4)
+- Look into [this](https://medium.com/@morgannewman/how-to-keep-your-free-heroku-app-online-forever-4093ef69d7f5) for keeping the app up and running.
 
 ## Documentation
 
